@@ -1,0 +1,10 @@
+{
+  "packages": {
+    "iron-router": {},
+    "bootstrap3-less": {},
+    "moment": {},
+    "spin": {},
+    "jquery-ui": {},
+    "mongodb-server-aggregation": {}
+  }
+}
