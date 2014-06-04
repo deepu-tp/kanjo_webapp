@@ -2,8 +2,10 @@
 /* AggregateStats: Event Handlers and Helpers */
 /*****************************************************************************/
 var _state = new ReactiveDict();
-_state.setDefault('start_date', new Date('2014-01-01'))
-_state.setDefault('end_date', new Date())
+_state.setDefault('start_date', new Date('2014-05-19'))
+_state.setDefault('end_date', new Date('2014-05-20'))
+_state.setDefault('location', 'WW')
+_state.setDefault('brand', 'pepsi')
 
 Template.AggregateStats.events({
   /*
@@ -33,6 +35,7 @@ Template.AggregateStats.created = function () {
     var brand = _state.get('brand')
     Meteor.subscribe('aggregates', brand, location)
   })
+
 
   var self = this
   nv.addGraph(function() {
@@ -70,7 +73,7 @@ Template.AggregateStats.rendered = function () {
 
   $("#slider").dateRangeSlider({
       bounds: {min: min_date, max: max_date},
-      defaultValues : {min : min_date, max: max_date},
+      defaultValues : {min : new Date('2014-05-18'), max: new Date('2014-05-20')},
       scales: [{
         first: function(value){ return value; },
         end: function(value) {return value; },
@@ -186,7 +189,6 @@ Template.AggregateStats.rendered = function () {
     var recs = Aggregates.find({}, {sort : {hour : 1}})
     recs.forEach(function(rec){
       var hour = new Date(rec['hour'] * 1000)
-      console.log(hour, start_date, end_date)
       if(hour >= start_date && hour < end_date){
 
         _.each(_.keys(data), function(key){
@@ -198,7 +200,7 @@ Template.AggregateStats.rendered = function () {
 
       }
       else{
-        console.log(hour)
+
       }
 
 
@@ -210,8 +212,6 @@ Template.AggregateStats.rendered = function () {
       return
     }
 
-
-    console.log(self)
     var chart_id = 'aggregate_chart'
 
     if(_.isEmpty($('#' + chart_id))){
@@ -227,6 +227,55 @@ Template.AggregateStats.rendered = function () {
     })
 
   })
+
+
+  Deps.autorun(function(){
+
+    var brand = _state.get('brand')
+    var location = _state.get('location')
+    var start_date = _state.get('start_date')
+    var end_date = _state.get('end_date')
+    Meteor.call('/app/wordcloud', brand, location, start_date, end_date,
+      function(err, words){
+
+        $('#wordcloud svg g').remove()
+
+        var id = 'wordcloud'
+        var fill = d3.scale.category10();
+
+        d3.layout.cloud().size([960, 600])
+                .words(words)
+                .padding(5)
+                .rotate(function() { return Random.choice(_.range(-90, +90, 5)); })
+                .fontSize(function(d) { return Math.sqrt(d.size); })
+                .on("end", draw)
+                .start();
+
+        function draw(words) {
+            d3.select("#" + id + " svg")
+                    .attr("width", 960)
+                    .attr("height", 600)
+                .append("g")
+                    .attr("transform", "translate(475,300)")
+                .selectAll("text")
+                    .data(words)
+                .enter().append("text")
+                    .style("font-size", function(d) { return d.size + "px"; })
+                    .style("fill", function(d, i) { return fill(i); })
+                    .attr("text-anchor", "middle")
+                    .attr("transform", function(d) {
+                        return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+                    })
+                    .text(function(d) { return d.text; });
+        }
+
+
+      })
+
+  })
+
+
+
 
 
 }
