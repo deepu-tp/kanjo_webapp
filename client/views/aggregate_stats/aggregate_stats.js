@@ -49,7 +49,7 @@ Template.AggregateStats.created = function () {
     chart.xAxis
       .tickFormat(function(d) {
         d = new moment(d);
-        return d.format("YYYY-MMM-D")
+        return d.format("YYYY-MMM-D HH")
       });
 
     chart.yAxis
@@ -88,7 +88,7 @@ Template.AggregateStats.rendered = function () {
         },
       }],
       formatter : function(val){
-          return moment(val).format("YYYY-MMM-D");
+          return moment(val).format("YYYY-MMM-D HH");
       },
       arrows : false
     });
@@ -249,7 +249,7 @@ Template.AggregateStats.rendered = function () {
         d3.layout.cloud().size([960, 600])
                 .spiral('archimedean')
                 .words(words)
-                .padding(5)
+                .padding(10)
                 .rotate(function() { return 0; })
                 .fontSize(function(d) { return fsize( d.size); })
                 .on("end", draw)
