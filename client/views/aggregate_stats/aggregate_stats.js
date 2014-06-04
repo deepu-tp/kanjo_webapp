@@ -2,7 +2,7 @@
 /* AggregateStats: Event Handlers and Helpers */
 /*****************************************************************************/
 var _state = new ReactiveDict();
-_state.setDefault('start_date', new Date('2014-05-19'))
+_state.setDefault('start_date', new Date('2014-05-17'))
 _state.setDefault('end_date', new Date('2014-05-20'))
 _state.setDefault('location', 'WW')
 _state.setDefault('brand', 'pepsi')
@@ -73,7 +73,7 @@ Template.AggregateStats.rendered = function () {
 
   $("#slider").dateRangeSlider({
       bounds: {min: min_date, max: max_date},
-      defaultValues : {min : new Date('2014-05-18'), max: new Date('2014-05-20')},
+      defaultValues : {min : new Date('2014-05-17'), max: new Date('2014-05-20')},
       scales: [{
         first: function(value){ return value; },
         end: function(value) {return value; },
@@ -245,8 +245,8 @@ Template.AggregateStats.rendered = function () {
 
         d3.layout.cloud().size([960, 600])
                 .words(words)
-                .padding(5)
-                .rotate(function() { return Random.choice(_.range(-90, +90, 5)); })
+                .padding(0)
+                .rotate(function() { return Random.choice(_.range(-1, +1, 1)); })
                 .fontSize(function(d) { return Math.sqrt(d.size); })
                 .on("end", draw)
                 .start();
