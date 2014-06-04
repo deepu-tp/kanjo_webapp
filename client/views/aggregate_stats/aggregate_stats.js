@@ -245,7 +245,7 @@ Template.AggregateStats.rendered = function () {
 
         d3.layout.cloud().size([960, 600])
                 .words(words)
-                .padding(0)
+                .padding(5)
                 .rotate(function() { return Random.choice(_.range(-1, +1, 1)); })
                 .fontSize(function(d) { return Math.sqrt(d.size); })
                 .on("end", draw)
