@@ -50,7 +50,7 @@ Meteor.methods({
       return -x['size']
     })
 
-    words = words.slice(0, 100)
+    words = words.slice(0, 200)
     return words
 
 

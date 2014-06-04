@@ -247,10 +247,11 @@ Template.AggregateStats.rendered = function () {
         var fill = d3.scale.category10();
 
         d3.layout.cloud().size([960, 600])
+                .spiral('archimedean')
                 .words(words)
                 .padding(5)
-                .rotate(function() { return Random.choice(_.range(-1, +1, 1)); })
-                .fontSize(function(d) { return fsize(d.size); })
+                .rotate(function() { return 0; })
+                .fontSize(function(d) { return fsize( d.size); })
                 .on("end", draw)
                 .start();
 
