@@ -238,6 +238,9 @@ Template.AggregateStats.rendered = function () {
     Meteor.call('/app/wordcloud', brand, location, start_date, end_date,
       function(err, words){
 
+        var fsize = d3.scale['linear']().range([10, 100])
+        fsize.domain([0, words[0]['size']])
+
         $('#wordcloud svg g').remove()
 
         var id = 'wordcloud'
@@ -247,7 +250,7 @@ Template.AggregateStats.rendered = function () {
                 .words(words)
                 .padding(5)
                 .rotate(function() { return Random.choice(_.range(-1, +1, 1)); })
-                .fontSize(function(d) { return Math.sqrt(d.size); })
+                .fontSize(function(d) { return fsize(d.size); })
                 .on("end", draw)
                 .start();
 
